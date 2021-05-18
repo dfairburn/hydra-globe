@@ -23,6 +23,7 @@
     "node": ">=14"
   },
   "dependencies": {
-    "three": "^0.128.0"
+    "three": "^0.128.0",
+    "three-orbit-controls": "^82.1.0"
   }
 }
