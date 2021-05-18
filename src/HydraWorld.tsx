@@ -3,10 +3,12 @@ import { PanelProps } from '@grafana/data';
 import { SimpleOptions } from 'types';
 import * as THREE from 'three';
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
+import { Point } from './point';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
 export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) => {
+  const fixture = require('./fixtures/sample_data.json')
   const scene = new THREE.Scene();
   const renderer = new THREE.WebGLRenderer( { alpha: true });
   const light = new THREE.PointLight( 0xffffff, 1, 100 );
@@ -16,13 +18,12 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
   const texture = new THREE.TextureLoader().load( globeImg );
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  const globeMaterial = new THREE.MeshStandardMaterial( {map: texture, opacity: 0.5, transparent: true })
+  const globeMaterial = new THREE.MeshStandardMaterial({ map: texture })
   const haloMaterial = new THREE.MeshPhongMaterial( { color: 1, opacity: 0.05, transparent: true, side: THREE.BackSide, emissive: 0xff, emissiveIntensity: 10})
   const rimLight = new THREE.PointLight( 0xffffff, 2, 100 );
   const ambientLight = new THREE.PointLight( 0xffffff, 0.25, 100 );
 
   const sphere = new THREE.Mesh( sphereGeometry, globeMaterial );
-  sphere.rotation.y = -1.5;
   const halo = new THREE.Mesh( haloGeometry, haloMaterial );
   let camera: THREE.PerspectiveCamera = new THREE.PerspectiveCamera;
   let controls: OrbitControls;
@@ -49,19 +50,13 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
   scene.add( sphere );
   scene.add( halo );
 
-  const pointGeometry = new THREE.SphereGeometry( 0.1, 64, 64 );
-  const pointMaterial = new THREE.MeshStandardMaterial( {color: 0xbb43d9})
-  const point = new THREE.Mesh( pointGeometry, pointMaterial );
+  const p = Point(0, 0)
+  fixture.forEach((d: any) => {
+    scene.add(Point(d.coord.from.lat, d.coord.from.lon))
+    scene.add(Point(d.coord.to.lat, d.coord.to.lon))
+  })
 
-  const r = 3.1
-  const px = r * Math.cos(0.0) * Math.sin(0.0)
-  const py = r * Math.sin(0.0) * Math.sin(0.0)
-  const pz = r * Math.cos(0.0)
-  point.position.setX(px)
-  point.position.setY(py)
-  point.position.setZ(pz)
-
-  scene.add(point);
+  scene.add(p);
 
 
   useEffect(() => {
