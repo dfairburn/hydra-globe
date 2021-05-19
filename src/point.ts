@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { SELECTABLE } from 'types';
 
 const RADIUS = 3;
 
@@ -12,12 +13,13 @@ export const Point = (lat: any, lon: any, name: any): THREE.Mesh => {
     point.position.setX(px)
     point.position.setY(py)
     point.position.setZ(pz)
-    point.name = name
+    point.userData = SELECTABLE
 
     return point
 }
 
 export const plotPoints = (lat: any, lon: any, rad: any) => {
+    rad = rad + 0.01
     const phi = (90-lat) * (Math.PI/180);
     const theta = (lon+180) * (Math.PI/180);
 

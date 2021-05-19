@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { SELECTABLE } from 'types';
 import { plotPoints } from './point';
 
 export const Curve = (from: any, to: any) => {
@@ -27,6 +28,6 @@ export const Curve = (from: any, to: any) => {
     const curveGeo = new THREE.BufferGeometry().setFromPoints( points )
     const curveMat = new THREE.LineBasicMaterial( {color: 0xd52685 , linewidth: 0.1} );
     const curve = new THREE.Line(curveGeo, curveMat)
-    curve.name = "Curve"
+    curve.userData = SELECTABLE
     return curve
 }
