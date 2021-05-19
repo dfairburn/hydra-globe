@@ -11,8 +11,6 @@ export const Curve = (from: any, to: any) => {
     if (radDist > 4) {
         radDist = 4;
     }
-    console.log("Dist: ", dist)
-    console.log("rad Dist: ", radDist)
     const [c1x, c1y, c1z] = plotPoints(from.lat, from.lon, radDist)
     const [c2x, c2y, c2z] = plotPoints(to.lat, to.lon, radDist)
 
@@ -24,7 +22,11 @@ export const Curve = (from: any, to: any) => {
 
     );
     const points = curvePts.getPoints( 50 );
+
+
     const curveGeo = new THREE.BufferGeometry().setFromPoints( points )
-    const curveMat = new THREE.LineBasicMaterial( {color: 0xd52685 } );
-    return new THREE.Line(curveGeo, curveMat)
+    const curveMat = new THREE.LineBasicMaterial( {color: 0xd52685 , linewidth: 0.1} );
+    const curve = new THREE.Line(curveGeo, curveMat)
+    curve.name = "Curve"
+    return curve
 }

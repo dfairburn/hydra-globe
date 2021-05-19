@@ -2,8 +2,8 @@ import * as THREE from 'three';
 
 const RADIUS = 3;
 
-export const Point = (lat: any, lon: any): THREE.Mesh => {
-    const pointGeometry = new THREE.SphereGeometry( 0.005, 8, 8 );
+export const Point = (lat: any, lon: any, name: any): THREE.Mesh => {
+    const pointGeometry = new THREE.SphereGeometry( 0.01, 8, 8 );
     const pointMaterial = new THREE.MeshStandardMaterial( {color: 0xbb43d9})
     const point = new THREE.Mesh( pointGeometry, pointMaterial );
 
@@ -12,6 +12,7 @@ export const Point = (lat: any, lon: any): THREE.Mesh => {
     point.position.setX(px)
     point.position.setY(py)
     point.position.setZ(pz)
+    point.name = name
 
     return point
 }

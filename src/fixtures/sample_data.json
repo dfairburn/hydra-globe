@@ -2,6 +2,7 @@
     {
         "metric": "traffic",
         "value": 100,
+        "name": "A - B",
         "coord": {
             "from": {
                 "lat": 52.05881353958806,
@@ -16,6 +17,7 @@
     {
         "metric": "traffic",
         "value": 500,
+        "name": "B - C",
         "coord": {
             "from": {
                 "lat": 52.00465949540943,
@@ -30,6 +32,7 @@
     {
         "metric": "traffic",
         "value": 1000050,
+        "name": "D - E",
         "coord": {
             "from": {
                 "lat": 12.975372531077891,
@@ -44,6 +47,7 @@
     {
         "metric": "traffic",
         "value": 2000000,
+        "name": "E - F",
         "coord": {
             "from": {
                 "lat": 51.7541281872922,
@@ -58,6 +62,7 @@
     {
         "metric": "traffic",
         "value": 100,
+        "name": "F - G",
         "coord": {
             "from": {
                 "lat": -33.879610417189376,
@@ -72,6 +77,7 @@
     {
         "metric": "traffic",
         "value": 100,
+        "name": "G - H",
         "coord": {
             "from": {
                 "lat": 50.11216488648201,
