@@ -6,7 +6,6 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Point } from './point';
 import { Curve } from './curve';
 import { Alert } from 'alert';
-import { SubtractiveBlending } from 'three';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
@@ -37,8 +36,8 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
   let INTERSECTED: any;
   let labeled = false;
 
-  sphereGeometry.boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 0, 0), 2.5)
-  haloGeometry.boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 0, 0), 2.5)
+  sphereGeometry.boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 0, 0), 2.5);
+  haloGeometry.boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 0, 0), 2.5);
 
   const sphere = new THREE.Mesh(sphereGeometry, globeMaterial);
   const backSphere = new THREE.Mesh(sphereGeometry, backMaterial);
@@ -77,8 +76,8 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
       mouse.x = ((event.clientX - root.offsetLeft) / root.clientWidth) * 2 - 1;
       mouse.y = -((event.clientY - root.offsetTop) / root.clientHeight) * 2 + 1;
     }
-    tooltipMouse.x = event.clientX
-    tooltipMouse.y = event.clientY
+    tooltipMouse.x = event.clientX;
+    tooltipMouse.y = event.clientY;
   }
 
   fixture.forEach((d: any) => {
@@ -86,17 +85,16 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
     const to = Point(d.coord.to.lat, d.coord.to.lon, d.name);
 
     const curve = Curve(d, threshold);
-    console.log(threshold)
+    console.log(threshold);
     if (d.value < threshold) {
-      const fromAlert = Alert(d.coord.from.lat, d.coord.from.lon, scene.position)
-      const toAlert = Alert(d.coord.to.lat, d.coord.to.lon, scene.position)
-      scene.add(fromAlert)
-      scene.add(toAlert)
+      const fromAlert = Alert(d.coord.from.lat, d.coord.from.lon, scene.position);
+      const toAlert = Alert(d.coord.to.lat, d.coord.to.lon, scene.position);
+      scene.add(fromAlert);
+      scene.add(toAlert);
     }
     scene.add(from);
     scene.add(to);
     scene.add(curve);
-
   });
 
   useEffect(() => {
@@ -125,7 +123,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
     controls.maxPolarAngle = Math.PI / 2 + 0.75;
 
     camera.updateProjectionMatrix();
-    camera.updateMatrixWorld()
+    camera.updateMatrixWorld();
     renderer.setSize(width, height);
   };
 
@@ -136,7 +134,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
   const hover = () => {
     raycaster.setFromCamera(mouse, camera);
 
-    const intersects = raycaster.intersectObjects(scene.children)
+    const intersects = raycaster.intersectObjects(scene.children);
 
     if (intersects.length > 0 && intersects[0].object.userData.selectable) {
       if (INTERSECTED !== intersects[0].object) {
@@ -144,52 +142,61 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
           INTERSECTED.material.color.setHex(INTERSECTED.currentHex);
         }
         if (intersects[0].object.visible) {
-          if (!labeled)  {
-              let text = document.createElement('div');
-              text.id = "tooltip";
-              text.style.position = 'absolute';
-              text.style.width = "100";
-              text.style.height = "100";
-              text.innerHTML = intersects[0].object.userData.data;
-              text.style.top = tooltipMouse.y + 'px';
-              text.style.left = tooltipMouse.x + 'px';
-              document.body.appendChild(text);
-              labeled = true;
+          if (!labeled) {
+            let text = document.createElement('div');
+            text.id = 'tooltip';
+            text.style.position = 'absolute';
+            text.style.width = '100';
+            text.style.height = '100';
+            if (intersects[0].object.userData.alerting === true) {
+              text.style.color = 'red';
+            } else {
+              text.style.color = 'white';
+            }
+            text.innerHTML = intersects[0].object.userData.data;
+            text.style.top = tooltipMouse.y + 'px';
+            text.style.left = tooltipMouse.x + 'px';
+            document.body.appendChild(text);
+            labeled = true;
           }
         }
 
         INTERSECTED = intersects[0].object;
         INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
-        INTERSECTED.material.color.setHex(0x00ff00);
+        console.log(INTERSECTED);
+        if (INTERSECTED.userData.alerting === true) {
+          INTERSECTED.material.color.setHex(0xffffff);
+        } else {
+          INTERSECTED.material.color.setHex(0x00ff00);
+        }
       }
-
     } else {
       if (INTERSECTED) {
         INTERSECTED.material.color.setHex(INTERSECTED.currentHex);
       }
-      document.getElementById("tooltip")?.remove()
+      document.getElementById('tooltip')?.remove();
       labeled = false;
       INTERSECTED = null;
     }
   };
 
-  const alerts = scene.children.filter((obj: any) => obj.name === "alert" )
-  console.log(alerts)
-  const clock = new THREE.Clock()
-  const opacityKF = new THREE.NumberKeyframeTrack(".material.opacity", [0, 2], [1, 0])
-  const scaleKF = new THREE.VectorKeyframeTrack( '.scale', [ 0, 2], [ 0, 0, 0, 3, 3, 3] );
+  const alerts = scene.children.filter((obj: any) => obj.name === 'alert');
+  console.log(alerts);
+  const clock = new THREE.Clock();
+  const opacityKF = new THREE.NumberKeyframeTrack('.material.opacity', [0, 2], [1, 0]);
+  const scaleKF = new THREE.VectorKeyframeTrack('.scale', [0, 2], [0, 0, 0, 3, 3, 3]);
   // const radiusKF = new THREE.NumberKeyframeTrack(".geometry.parameters.radius", [0, 1, 2, 3, 4], [0, 0.1, 0.2, 0.4, 0.5])
   // const tubeKF = new THREE.NumberKeyframeTrack(".geometry.parameters.tube", [0, 1, 2, 3, 4], [0.3, 0.25, 0.2, 0.15, 0.1])
   const clip = new THREE.AnimationClip('blink', -1, [opacityKF, scaleKF]);
-  const animGroup = new THREE.AnimationObjectGroup()
-  alerts.forEach((obj: any) => animGroup.add(obj))
-  const mixer = new THREE.AnimationMixer(animGroup)
+  const animGroup = new THREE.AnimationObjectGroup();
+  alerts.forEach((obj: any) => animGroup.add(obj));
+  const mixer = new THREE.AnimationMixer(animGroup);
   const action = mixer.clipAction(clip);
-  action.play()
+  action.play();
 
   const render = () => {
     requestAnimationFrame(render);
-    const delta = clock.getDelta()
+    const delta = clock.getDelta();
     if (spin) {
       theta += 0.01;
       camera.position.x = 10 * Math.sin(THREE.MathUtils.degToRad(theta));
@@ -197,9 +204,8 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
     }
 
     if (mixer) {
-      mixer.update( delta )
+      mixer.update(delta);
     }
-
 
     controls.update();
     hover();
