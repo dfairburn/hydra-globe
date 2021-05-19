@@ -16,7 +16,7 @@
     },
     {
         "metric": "traffic",
-        "value": 500,
+        "value": 1000,
         "name": "B - C",
         "coord": {
             "from": {
@@ -61,7 +61,7 @@
     },
     {
         "metric": "traffic",
-        "value": 100,
+        "value": 500,
         "name": "F - G",
         "coord": {
             "from": {
